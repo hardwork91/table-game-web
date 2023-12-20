@@ -5,6 +5,25 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* background-image: url('./assets/images/fondo.jpeg'); */
+
+
+  /* background-color: #008c41;
+  background-image: url("https://www.transparenttextures.com/patterns/45-degree-fabric-dark.png"); */
+
+  background-color: #0B5529;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000'%3E%3Cg %3E%3Ccircle fill='%230B5529' cx='50' cy='0' r='50'/%3E%3Cg fill='%230a592a' %3E%3Ccircle cx='0' cy='50' r='50'/%3E%3Ccircle cx='100' cy='50' r='50'/%3E%3C/g%3E%3Ccircle fill='%23095c2a' cx='50' cy='100' r='50'/%3E%3Cg fill='%2308602a' %3E%3Ccircle cx='0' cy='150' r='50'/%3E%3Ccircle cx='100' cy='150' r='50'/%3E%3C/g%3E%3Ccircle fill='%2308632b' cx='50' cy='200' r='50'/%3E%3Cg fill='%2307672b' %3E%3Ccircle cx='0' cy='250' r='50'/%3E%3Ccircle cx='100' cy='250' r='50'/%3E%3C/g%3E%3Ccircle fill='%23076b2b' cx='50' cy='300' r='50'/%3E%3Cg fill='%23076e2b' %3E%3Ccircle cx='0' cy='350' r='50'/%3E%3Ccircle cx='100' cy='350' r='50'/%3E%3C/g%3E%3Ccircle fill='%2307722b' cx='50' cy='400' r='50'/%3E%3Cg fill='%2308762b' %3E%3Ccircle cx='0' cy='450' r='50'/%3E%3Ccircle cx='100' cy='450' r='50'/%3E%3C/g%3E%3Ccircle fill='%2309792b' cx='50' cy='500' r='50'/%3E%3Cg fill='%230a7d2b' %3E%3Ccircle cx='0' cy='550' r='50'/%3E%3Ccircle cx='100' cy='550' r='50'/%3E%3C/g%3E%3Ccircle fill='%230c812b' cx='50' cy='600' r='50'/%3E%3Cg fill='%230e852a' %3E%3Ccircle cx='0' cy='650' r='50'/%3E%3Ccircle cx='100' cy='650' r='50'/%3E%3C/g%3E%3Ccircle fill='%2310882a' cx='50' cy='700' r='50'/%3E%3Cg fill='%23128c29' %3E%3Ccircle cx='0' cy='750' r='50'/%3E%3Ccircle cx='100' cy='750' r='50'/%3E%3C/g%3E%3Ccircle fill='%23159028' cx='50' cy='800' r='50'/%3E%3Cg fill='%23179427' %3E%3Ccircle cx='0' cy='850' r='50'/%3E%3Ccircle cx='100' cy='850' r='50'/%3E%3C/g%3E%3Ccircle fill='%231a9726' cx='50' cy='900' r='50'/%3E%3Cg fill='%231d9b25' %3E%3Ccircle cx='0' cy='950' r='50'/%3E%3Ccircle cx='100' cy='950' r='50'/%3E%3C/g%3E%3Ccircle fill='%23209F23' cx='50' cy='1000' r='50'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed;
+  background-size: contain;
+
+  /* background-color: rgb(19, 103, 55);
+  background-image:
+    radial-gradient(circle at 100% 150%, rgb(19, 103, 55) 24%, rgb(30, 136, 65) 24%, rgb(30, 136, 65) 28%, rgb(19, 103, 55) 28%, rgb(19, 103, 55) 36%, rgb(30, 136, 65) 36%, rgb(30, 136, 65) 40%, transparent 40%, transparent),
+    radial-gradient(circle at 0 150%, rgb(19, 103, 55) 24%, rgb(30, 136, 65) 24%, rgb(30, 136, 65) 28%, rgb(19, 103, 55) 28%, rgb(19, 103, 55) 36%, rgb(30, 136, 65) 36%, rgb(30, 136, 65) 40%, transparent 40%, transparent),
+    radial-gradient(circle at 50% 100%, rgb(30, 136, 65) 10%, rgb(19, 103, 55) 10%, rgb(19, 103, 55) 23%, rgb(30, 136, 65) 23%, rgb(30, 136, 65) 30%, rgb(19, 103, 55) 30%, rgb(19, 103, 55) 43%, rgb(30, 136, 65) 43%, rgb(30, 136, 65) 50%, rgb(19, 103, 55) 50%, rgb(19, 103, 55) 63%, rgb(30, 136, 65) 63%, rgb(30, 136, 65) 71%, transparent 71%, transparent),
+    radial-gradient(circle at 100% 50%, rgb(30, 136, 65) 5%, rgb(19, 103, 55) 5%, rgb(19, 103, 55) 15%, rgb(30, 136, 65) 15%, rgb(30, 136, 65) 20%, rgb(19, 103, 55) 20%, rgb(19, 103, 55) 29%, rgb(30, 136, 65) 29%, rgb(30, 136, 65) 34%, rgb(19, 103, 55) 34%, rgb(19, 103, 55) 44%, rgb(30, 136, 65) 44%, rgb(30, 136, 65) 49%, transparent 49%, transparent),
+    radial-gradient(circle at 0 50%, rgb(30, 136, 65) 5%, rgb(19, 103, 55) 5%, rgb(19, 103, 55) 15%, rgb(30, 136, 65) 15%, rgb(30, 136, 65) 20%, rgb(19, 103, 55) 20%, rgb(19, 103, 55) 29%, rgb(30, 136, 65) 29%, rgb(30, 136, 65) 34%, rgb(19, 103, 55) 34%, rgb(19, 103, 55) 44%, rgb(30, 136, 65) 44%, rgb(30, 136, 65) 49%, transparent 49%, transparent);
+  background-size: 100px 50px; */
 }
 
 code {

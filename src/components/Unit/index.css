@@ -1,0 +1,88 @@
+.unit {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  position: relative;
+}
+
+.unit .info {
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  position: relative;
+  background: rgb(255 255 255);
+  box-shadow: #bfbfbf 0 3px;
+}
+
+.unit .info.selected {
+  background: #ffcb00;
+  box-shadow: #ff8606 0 3px;
+}
+
+.unit .info .type {
+  font-size: 30px;
+  font-weight: bolder;
+  text-shadow: 0 -1px 0 #000000b5;
+}
+
+.unit .info .points {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  background: black;
+  color: white;
+  border-radius: 50px;
+  border: white 1px solid;
+}
+
+.unit.level-2 {
+  top: -5px;
+}
+
+.unit.level-3 {
+  top: -10px;
+}
+
+.unit.ally {
+  color: rgb(0, 157, 255)
+}
+
+.unit.enemy {
+  color: rgb(255, 88, 88)
+}
+
+.unit .base {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #8d8d8d;
+  box-shadow: #bfbfbf 0 3px;
+  border-radius: 10px;
+}
+
+.unit .base.selected {
+  background: #ffcb00;
+  box-shadow: #ff8606 0 3px;
+}
+
+.unit .base.base-level-2 {
+  top: 5px;
+  z-index: 2;
+  transform: rotate(5deg);
+}
+
+.unit .base-level-3 {
+  top: 9px;
+  z-index: 1;
+  transform: rotate(-3deg);
+}
