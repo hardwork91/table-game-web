@@ -4,16 +4,16 @@ import { IPosition } from '../models/IPosition';
 import { IUnit } from '../models/IUnit';
 import { BaseUnit } from './baseUnit';
 
-interface WarriorProps {
+interface MageProps {
   position: IPosition;
   faction: Faction;
   points?: number;
   level?: UnitLevels;
 }
 
-export class Warrior extends BaseUnit implements IUnit {
-  constructor(props: WarriorProps) {
-    super({ ...props, type: UnitTypes.WARRIOR, name: 'W' });
+export class Mage extends BaseUnit {
+  constructor(props: MageProps) {
+    super({ ...props, type: UnitTypes.MAGE, name: 'M' });
   }
 
   attack(game: IGame, target: IPosition): IUnit {

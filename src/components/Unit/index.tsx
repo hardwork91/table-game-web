@@ -1,7 +1,6 @@
 import classNames from 'classnames';
-import { FunctionComponent, ReactNode } from 'react';
+import { FunctionComponent } from 'react';
 import { Faction, UnitLevels, UnitTypes } from '../../constants/general';
-import BoxContainerComponent from '../BoxContainer';
 import './index.css';
 
 interface UnitComponentProps {
@@ -11,6 +10,7 @@ interface UnitComponentProps {
   faction: Faction;
   type: UnitTypes;
   selected: boolean;
+  rotations: number[];
 }
 
 const UnitComponent: FunctionComponent<UnitComponentProps> = ({
@@ -20,22 +20,31 @@ const UnitComponent: FunctionComponent<UnitComponentProps> = ({
   faction,
   type,
   selected,
+  rotations,
 }) => {
   return (
     <div
       className={classNames('unit', faction.toLowerCase(), `level-${level}`)}
     >
-      {/* <div className={classNames('level', `level-${level}`)}>{level}</div> */}
-      <div className={classNames('info', { selected })}>
+      <div
+        className={classNames('info', { selected })}
+        style={{ transform: `rotate(${rotations[0]}deg)` }}
+      >
         <div className='points'>{points}</div>
         <div className={classNames('type', type.toLowerCase())}>{name}</div>
       </div>
 
       {level >= 2 && (
-        <div className={classNames('base', 'base-level-2', { selected })}></div>
+        <div
+          className={classNames('base', 'base-level-2', { selected })}
+          style={{ transform: `rotate(${rotations[1]}deg)` }}
+        ></div>
       )}
       {level >= 3 && (
-        <div className={classNames('base', 'base-level-3', { selected })}></div>
+        <div
+          className={classNames('base', 'base-level-3', { selected })}
+          style={{ transform: `rotate(${rotations[2]}deg)` }}
+        ></div>
       )}
     </div>
   );

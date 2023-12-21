@@ -16,6 +16,8 @@ export enum UnitLevels {
     LEVEL3 = 3,
 }
 
+export const MOVEMENTS_PER_TURN = 3
+
 export const UNIT_INITIAL_POINTS = {
     [UnitTypes.WARRIOR]: 5,
     [UnitTypes.ARCHER]: 3,

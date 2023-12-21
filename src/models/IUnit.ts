@@ -13,6 +13,7 @@ export interface IUnit {
     faction: Faction;
     level: UnitLevels
     selected: boolean
+    rotations: number[]
 
     // moves a unit from current position to target position
     // returns true if moves can be achived 
