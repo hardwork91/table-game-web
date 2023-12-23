@@ -7,7 +7,6 @@ export interface IBoardBox {
 }
 
 export interface IGame {
-    minePoints: number;
     enemyPoints: number;
     board: IBoardBox[][];
 }

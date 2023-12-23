@@ -1,4 +1,4 @@
-import { Faction, UnitTypes } from "../constants/general";
+import { Faction, UnitLevels, UnitTypes } from "../constants/general";
 import { IBoardBox } from "../models/IGame";
 import { IPosition } from "../models/IPosition";
 import { Archer } from "../units/archer";
@@ -23,23 +23,24 @@ export const generateBoard = () => {
     const insertUnit = (
         type: UnitTypes,
         faction: Faction,
-        position: IPosition
+        position: IPosition,
+        level: UnitLevels = UnitLevels.LEVEL1
     ) => {
         const { row, column } = position;
 
         let unit;
         switch (type) {
             case UnitTypes.WARRIOR:
-                unit = new Warrior({ position, faction });
+                unit = new Warrior({ position, faction, level });
                 break;
             case UnitTypes.ARCHER:
-                unit = new Archer({ position, faction });
+                unit = new Archer({ position, faction, level });
                 break;
             case UnitTypes.MAGE:
-                unit = new Mage({ position, faction });
+                unit = new Mage({ position, faction, level });
                 break;
             case UnitTypes.KING:
-                unit = new King({ position, faction });
+                unit = new King({ position, faction, level });
                 break;
 
             default:
@@ -55,7 +56,11 @@ export const generateBoard = () => {
     // allies
     insertUnit(UnitTypes.WARRIOR, Faction.ALLY, {
         row: 3,
-        column: 1,
+        column: 2,
+    });
+    insertUnit(UnitTypes.WARRIOR, Faction.ALLY, {
+        row: 4,
+        column: 2,
     });
     insertUnit(UnitTypes.ARCHER, Faction.ALLY, {
         row: 5,
@@ -75,6 +80,10 @@ export const generateBoard = () => {
         row: 2,
         column: 2,
     });
+    insertUnit(UnitTypes.WARRIOR, Faction.ENEMY, {
+        row: 2,
+        column: 1,
+    }, UnitLevels.LEVEL2);
     insertUnit(UnitTypes.ARCHER, Faction.ENEMY, {
         row: 1,
         column: 4,
@@ -104,6 +113,12 @@ export const isAdyacent = (origen: IPosition, target: IPosition): boolean => {
     const diffX = Math.abs(origen.row - target.row);
     const diffY = Math.abs(origen.column - target.column);
     return diffX <= 1 && diffY <= 1
+}
+
+export const getDistance = (origen: IPosition, target: IPosition): number => {
+    const diffX = Math.abs(origen.row - target.row);
+    const diffY = Math.abs(origen.column - target.column);
+    return Math.max(diffX, diffY)
 }
 
 export const getRandomRotation = (max?: number, min?: number) => {

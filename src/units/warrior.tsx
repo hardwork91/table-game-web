@@ -1,7 +1,9 @@
 import { Faction, UnitLevels, UnitTypes } from '../constants/general';
-import { IGame } from '../models/IGame';
+import { IAttackResult } from '../models/IAttackResult';
+import { IBoardBox } from '../models/IGame';
 import { IPosition } from '../models/IPosition';
 import { IUnit } from '../models/IUnit';
+import { getDistance, isAdyacent } from '../utils/utils';
 import { BaseUnit } from './baseUnit';
 
 interface WarriorProps {
@@ -13,10 +15,52 @@ interface WarriorProps {
 
 export class Warrior extends BaseUnit implements IUnit {
   constructor(props: WarriorProps) {
-    super({ ...props, type: UnitTypes.WARRIOR, name: 'W' });
+    super({ ...props, type: UnitTypes.WARRIOR, name: 'W', range: 1 });
   }
 
-  attack(game: IGame, target: IPosition): IUnit {
-    return this;
+  attack(target: IBoardBox): IAttackResult {
+    const attackedUnit = target.unit!;
+    const distance = getDistance(this.position, attackedUnit.position);
+    const canAttack = distance <= this.range;
+    if (canAttack) {
+      const unitPoints = this.points;
+      const attackedUnitPoints = attackedUnit.points;
+      this.release();
+
+      if (unitPoints > attackedUnitPoints) {
+        // se gana el ataque
+        this.updatePoints(Math.max(unitPoints - attackedUnitPoints, 0));
+        const originLastPosition = this.position;
+        this.updatePosition(attackedUnit.position);
+
+        return {
+          origin: { position: originLastPosition, unit: undefined },
+          target: { position: target.position, unit: this },
+          gainedPoints: attackedUnitPoints,
+        };
+      } else {
+        if (unitPoints === attackedUnitPoints) {
+          // si ambos se destruyen
+
+          return {
+            origin: { position: this.position, unit: undefined },
+            target: { position: target.position, unit: undefined },
+            gainedPoints: 0,
+          };
+        } else {
+          // si se pierde el ataque
+          attackedUnit.updatePoints(
+            Math.max(attackedUnitPoints - unitPoints, 0)
+          );
+          return {
+            origin: { position: this.position, unit: undefined },
+            target: { position: target.position, unit: attackedUnit },
+            gainedPoints: 0,
+          };
+        }
+      }
+    }
+
+    return super.attack(target);
   }
 }

@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Faction, UnitTypes, UnitLevels } from "../constants/general"
-import { IGame } from "./IGame";
+import { IAttackResult } from "./IAttackResult";
+import { IBoardBox } from "./IGame";
 import { IPosition } from "./IPosition";
 
 export interface IUnit {
@@ -14,14 +15,19 @@ export interface IUnit {
     level: UnitLevels
     selected: boolean
     rotations: number[]
+    range: number
 
     // moves a unit from current position to target position
     // returns true if moves can be achived 
-    move(game: IGame, target: IPosition): IUnit
+    move(target: IPosition): IUnit
 
-    attack(game: IGame, target: IPosition): IUnit
+    attack(target: IBoardBox): IAttackResult
 
-    fuse(game: IGame, target: IPosition): IUnit
+    updatePoints(points: number): void
+
+    updatePosition(position: IPosition): void
+
+    fuse(target: IPosition, consumedUnit: IUnit): IUnit
 
     select(): IUnit
 
