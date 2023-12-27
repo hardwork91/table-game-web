@@ -3,7 +3,7 @@ import { IAttackResult } from '../models/IAttackResult';
 import { IBoardBox } from '../models/IGame';
 import { IPosition } from '../models/IPosition';
 import { IUnit } from '../models/IUnit';
-import { getDistance, isAdyacent } from '../utils/utils';
+import { getDistance } from '../utils/utils';
 import { BaseUnit } from './baseUnit';
 
 interface WarriorProps {

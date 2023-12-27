@@ -131,15 +131,12 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
   };
 
   const attack = (unit: IUnit, targetUnit: IUnit) => {
-    const lastPosition = unit.position;
     const attackResult: IAttackResult = unit.attack({
       position: targetUnit.position,
       unit: targetUnit,
     });
     console.log('attackResult', attackResult);
-    // origin: { position: this.position, unit: undefined },
-    // target: { position: target.position, unit: this },
-    // gainedPoints: attackedUnitPoints,
+
     setScore(score + attackResult.gainedPoints);
     setSelectedUnit(undefined); // siempre voy a deseleccionar la unidad despues de un ataque
     setUpdateBoard([attackResult.origin, attackResult.target]);
