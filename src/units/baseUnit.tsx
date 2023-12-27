@@ -60,6 +60,7 @@ export class BaseUnit implements IUnit {
       origin: { position: this.position, unit: this },
       target: { position: target.position, unit: target.unit },
       gainedPoints: 0,
+      couldAttack: false,
     };
   }
 

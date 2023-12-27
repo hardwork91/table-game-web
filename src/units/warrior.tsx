@@ -37,6 +37,7 @@ export class Warrior extends BaseUnit implements IUnit {
           origin: { position: originLastPosition, unit: undefined },
           target: { position: target.position, unit: this },
           gainedPoints: attackedUnitPoints,
+          couldAttack: true,
         };
       } else {
         if (unitPoints === attackedUnitPoints) {
@@ -46,6 +47,7 @@ export class Warrior extends BaseUnit implements IUnit {
             origin: { position: this.position, unit: undefined },
             target: { position: target.position, unit: undefined },
             gainedPoints: 0,
+            couldAttack: true,
           };
         } else {
           // si se pierde el ataque
@@ -56,6 +58,7 @@ export class Warrior extends BaseUnit implements IUnit {
             origin: { position: this.position, unit: undefined },
             target: { position: target.position, unit: attackedUnit },
             gainedPoints: 0,
+            couldAttack: true,
           };
         }
       }

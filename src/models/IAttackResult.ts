@@ -4,4 +4,5 @@ export interface IAttackResult {
     origin: IBoardBox;
     target: IBoardBox
     gainedPoints: number
+    couldAttack: boolean
 }
