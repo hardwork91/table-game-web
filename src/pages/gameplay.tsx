@@ -12,6 +12,7 @@ import {
 } from '../constants/general';
 import { IAttackResult } from '../models/IAttackResult';
 import { IBoardBox, IGame } from '../models/IGame';
+import { IHealResult } from '../models/IHealResult';
 import { IPosition } from '../models/IPosition';
 import { IUnit } from '../models/IUnit';
 import { generateBoard, getBox, isAdyacent, updateBoard } from '../utils/utils';
@@ -75,6 +76,13 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
                 unit.level !== MAX_LEVEL
               ) {
                 fuse(position, selectedUnit, unit);
+              } else {
+                if (
+                  selectedUnit.type === UnitTypes.MAGE &&
+                  unit.type !== UnitTypes.KING
+                ) {
+                  heal(selectedUnit, unit);
+                }
               }
             } else {
               // si es una unidad enemiga
@@ -135,16 +143,28 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
       position: targetUnit.position,
       unit: targetUnit,
     });
-    console.log('attackResult', attackResult);
+    if (attackResult.couldAttack) {
+      setScore(score + attackResult.gainedPoints);
+      setUpdateBoard([attackResult.origin, attackResult.target]);
+      finishMovement();
+    }
+  };
 
-    setScore(score + attackResult.gainedPoints);
-    setSelectedUnit(undefined); // siempre voy a deseleccionar la unidad despues de un ataque
-    setUpdateBoard([attackResult.origin, attackResult.target]);
-    finishMovement();
+  const heal = (unit: IUnit, targetUnit: IUnit) => {
+    const healResult: IHealResult = unit.heal({
+      position: targetUnit.position,
+      unit: targetUnit,
+    });
+
+    if (healResult.couldHeal) {
+      setUpdateBoard([healResult.target]);
+      finishMovement();
+    }
   };
 
   const finishMovement = () => {
     const nextRemainingMovements = remainingMovements - 1;
+    setSelectedUnit(undefined); // siempre voy a deseleccionar la unidad despues de un turno
     setRemainingMovements(nextRemainingMovements);
     if (nextRemainingMovements == 0 || selectedUnit?.type === UnitTypes.KING) {
       finishTurn();

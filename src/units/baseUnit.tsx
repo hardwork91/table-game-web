@@ -12,6 +12,7 @@ import { IPosition } from '../models/IPosition';
 import { IUnit } from '../models/IUnit';
 import { IBoardBox } from '../models/IGame';
 import { getRandomRotation } from '../utils/utils';
+import { IHealResult } from '../models/IHealResult';
 
 interface BaseUnitProps {
   type: UnitTypes;
@@ -64,8 +65,17 @@ export class BaseUnit implements IUnit {
     };
   }
 
+  heal(target: IBoardBox): IHealResult {
+    return {
+      origin: { position: this.position, unit: this },
+      target: { position: target.position, unit: target.unit },
+      couldHeal: false,
+    };
+  }
+
   move(target: IPosition): IUnit {
     this.position = target;
+    this.release();
     return this;
   }
 
@@ -81,6 +91,7 @@ export class BaseUnit implements IUnit {
     this.position = target;
     this.level = this.level + 1;
     this.points = this.points + consumedUnit.points;
+    this.release();
     return this;
   }
 

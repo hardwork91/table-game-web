@@ -28,9 +28,9 @@ export class BaseDistanceUnit extends BaseUnit implements IUnit {
     if (canAttack) {
       const unitPoints = this.points - distance + 1;
       const attackedUnitPoints = attackedUnit.points;
-      this.release();
 
       if (unitPoints > 0) {
+        this.release();
         attackedUnit.updatePoints(Math.max(attackedUnitPoints - unitPoints, 0));
 
         return {

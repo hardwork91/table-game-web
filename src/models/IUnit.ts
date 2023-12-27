@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Faction, UnitTypes, UnitLevels } from "../constants/general"
 import { IAttackResult } from "./IAttackResult";
 import { IBoardBox } from "./IGame";
+import { IHealResult } from "./IHealResult";
 import { IPosition } from "./IPosition";
 
 export interface IUnit {
@@ -28,6 +29,8 @@ export interface IUnit {
     updatePosition(position: IPosition): void
 
     fuse(target: IPosition, consumedUnit: IUnit): IUnit
+
+    heal(target: IBoardBox): IHealResult
 
     select(): IUnit
 
