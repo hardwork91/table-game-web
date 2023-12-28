@@ -84,16 +84,16 @@ export const generateBoard = () => {
         row: 2,
         column: 1,
     }, UnitLevels.LEVEL2);
-    insertUnit(UnitTypes.ARCHER, Faction.ENEMY, {
-        row: 1,
-        column: 4,
-    });
+    // insertUnit(UnitTypes.ARCHER, Faction.ENEMY, {
+    //     row: 1,
+    //     column: 4,
+    // });
     insertUnit(UnitTypes.MAGE, Faction.ENEMY, {
         row: 0,
         column: 1,
     });
     insertUnit(UnitTypes.KING, Faction.ENEMY, {
-        row: 0,
+        row: 2,
         column: 3,
     });
 
@@ -129,3 +129,24 @@ export const getRandomRotation = (max?: number, min?: number) => {
     );
     return numeroAleatorioEntero;
 };
+
+export const hasUnitsArround = (board: IBoardBox[][], target: IPosition) => {
+    const { row, column } = target
+    const targetUnit = board[row][column].unit!
+
+    const positionsToCheck = [
+        { row: row - 1, column: column - 1 }, { row: row - 1, column: column }, { row: row - 1, column: column + 1 },
+        { row, column: column - 1 }, { row, column: column + 1 },
+        { row: row + 1, column: column - 1 }, { row: row + 1, column: column }, { row: row + 1, column: column + 1 }
+    ]
+
+    let hasUnitArraund = false
+
+    positionsToCheck.forEach(position => {
+        const box = board![position.row]?.[position.column]
+        if (box) {
+            hasUnitArraund = hasUnitArraund || box.unit?.faction === targetUnit.faction;
+        }
+    });
+    return hasUnitArraund
+}

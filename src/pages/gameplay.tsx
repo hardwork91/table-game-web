@@ -15,7 +15,13 @@ import { IBoardBox, IGame } from '../models/IGame';
 import { IHealResult } from '../models/IHealResult';
 import { IPosition } from '../models/IPosition';
 import { IUnit } from '../models/IUnit';
-import { generateBoard, getBox, isAdyacent, updateBoard } from '../utils/utils';
+import {
+  generateBoard,
+  getBox,
+  hasUnitsArround,
+  isAdyacent,
+  updateBoard,
+} from '../utils/utils';
 import './index.css';
 
 interface GameplayProps {}
@@ -56,6 +62,7 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
     if (remainingMovements! > 0) {
       const box = getBox(game?.board!, position);
       const unit = box.unit;
+
       if (!selectedUnit) {
         if (unit && unit.faction === Faction.ALLY) {
           selectUnit(position, unit);
@@ -89,8 +96,10 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
               if (unit.type !== UnitTypes.KING) {
                 attack(selectedUnit, unit);
               } else {
-                const isKingUnprotected = false;
-                //attack
+                const isKingProtected = hasUnitsArround(game!.board, position);
+                if (!isKingProtected) {
+                  attack(selectedUnit, unit);
+                }
               }
             }
           }
