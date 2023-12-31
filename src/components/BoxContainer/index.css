@@ -4,3 +4,7 @@
   border-radius: 10px;
   border: #ffffff5b 1px solid;
 }
+
+.box-container.disabled {
+  opacity: 0.5;
+}

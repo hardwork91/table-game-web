@@ -12,6 +12,6 @@ interface KingProps {
 
 export class King extends BaseBodyUnit implements IUnit {
   constructor(props: KingProps) {
-    super({ ...props, type: UnitTypes.KING, name: 'K', range: 1 });
+    super({ ...props, type: UnitTypes.KING, range: 1 });
   }
 }

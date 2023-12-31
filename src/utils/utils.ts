@@ -6,8 +6,44 @@ import { King } from "../units/king";
 import { Mage } from "../units/mage";
 import { Warrior } from "../units/warrior";
 
+export const insertUnit = (
+    board: IBoardBox[][],
+    type: UnitTypes,
+    faction: Faction,
+    position: IPosition,
+    level: UnitLevels = UnitLevels.LEVEL1
+) => {
+    const { row, column } = position;
+
+    let unit;
+    switch (type) {
+        case UnitTypes.WARRIOR:
+            unit = new Warrior({ position, faction, level });
+            break;
+        case UnitTypes.ARCHER:
+            unit = new Archer({ position, faction, level });
+            break;
+        case UnitTypes.MAGE:
+            unit = new Mage({ position, faction, level });
+            break;
+        case UnitTypes.KING:
+            unit = new King({ position, faction, level });
+            break;
+
+        default:
+            break;
+    }
+
+    board[row][column] = {
+        position,
+        unit,
+    };
+
+    return board
+};
+
 export const generateBoard = () => {
-    const board: IBoardBox[][] = [];
+    let board: IBoardBox[][] = [];
     for (let i = 0; i < 6; i++) {
         const newRow = [];
         for (let j = 0; j < 6; j++) {
@@ -20,79 +56,48 @@ export const generateBoard = () => {
         board.push(newRow);
     }
 
-    const insertUnit = (
-        type: UnitTypes,
-        faction: Faction,
-        position: IPosition,
-        level: UnitLevels = UnitLevels.LEVEL1
-    ) => {
-        const { row, column } = position;
 
-        let unit;
-        switch (type) {
-            case UnitTypes.WARRIOR:
-                unit = new Warrior({ position, faction, level });
-                break;
-            case UnitTypes.ARCHER:
-                unit = new Archer({ position, faction, level });
-                break;
-            case UnitTypes.MAGE:
-                unit = new Mage({ position, faction, level });
-                break;
-            case UnitTypes.KING:
-                unit = new King({ position, faction, level });
-                break;
-
-            default:
-                break;
-        }
-
-        board[row][column] = {
-            position,
-            unit,
-        };
-    };
 
     // allies
-    insertUnit(UnitTypes.WARRIOR, Faction.ALLY, {
+    board = insertUnit(board, UnitTypes.WARRIOR, Faction.ALLY, {
         row: 3,
         column: 2,
     });
-    insertUnit(UnitTypes.WARRIOR, Faction.ALLY, {
+    board = insertUnit(board, UnitTypes.WARRIOR, Faction.ALLY, {
         row: 4,
         column: 2,
     });
-    insertUnit(UnitTypes.ARCHER, Faction.ALLY, {
+    board = insertUnit(board, UnitTypes.ARCHER, Faction.ALLY, {
         row: 5,
         column: 3,
     });
-    insertUnit(UnitTypes.MAGE, Faction.ALLY, {
+    board = insertUnit(board, UnitTypes.MAGE, Faction.ALLY, {
         row: 4,
         column: 4,
     });
-    insertUnit(UnitTypes.KING, Faction.ALLY, {
+    board = insertUnit(board, UnitTypes.KING, Faction.ALLY, {
         row: 5,
         column: 2,
     });
 
     // enemies
-    insertUnit(UnitTypes.WARRIOR, Faction.ENEMY, {
+    board = insertUnit(board, UnitTypes.WARRIOR, Faction.ENEMY, {
         row: 2,
         column: 2,
     });
-    insertUnit(UnitTypes.WARRIOR, Faction.ENEMY, {
+    board = insertUnit(board, UnitTypes.WARRIOR, Faction.ENEMY, {
         row: 2,
         column: 1,
     }, UnitLevels.LEVEL2);
-    // insertUnit(UnitTypes.ARCHER, Faction.ENEMY, {
+    // insertUnit(board,UnitTypes.ARCHER, Faction.ENEMY, {
     //     row: 1,
     //     column: 4,
     // });
-    insertUnit(UnitTypes.MAGE, Faction.ENEMY, {
+    board = insertUnit(board, UnitTypes.MAGE, Faction.ENEMY, {
         row: 0,
         column: 1,
     });
-    insertUnit(UnitTypes.KING, Faction.ENEMY, {
+    board = insertUnit(board, UnitTypes.KING, Faction.ENEMY, {
         row: 2,
         column: 3,
     });

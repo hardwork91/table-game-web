@@ -8,10 +8,11 @@ interface WarriorProps {
   faction: Faction;
   points?: number;
   level?: UnitLevels;
+  rotations?: number[];
 }
 
 export class Warrior extends BaseBodyUnit implements IUnit {
   constructor(props: WarriorProps) {
-    super({ ...props, type: UnitTypes.WARRIOR, name: 'W', range: 1 });
+    super({ ...props, type: UnitTypes.WARRIOR, range: 1 });
   }
 }

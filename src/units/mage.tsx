@@ -15,7 +15,7 @@ interface MageProps {
 
 export class Mage extends BaseDistanceUnit implements IUnit {
   constructor(props: MageProps) {
-    super({ ...props, type: UnitTypes.MAGE, name: 'M', range: 2 });
+    super({ ...props, type: UnitTypes.MAGE, range: 2 });
   }
 
   heal(target: IBoardBox): IHealResult {

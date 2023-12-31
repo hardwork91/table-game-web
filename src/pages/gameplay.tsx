@@ -1,12 +1,10 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import BoxContainer from '../components/BoxContainer';
+import Store from '../components/Store';
 import UnitComponent from '../components/Unit';
 import {
   Faction,
-  INITIAL_SCORE,
-  MAX_LEVEL,
-  MOVEMENTS_PER_TURN,
-  UnitLevels,
+  GAME_CONFIG,
   UnitTypes,
   UNIT_COST,
 } from '../constants/general';
@@ -19,6 +17,7 @@ import {
   generateBoard,
   getBox,
   hasUnitsArround,
+  insertUnit,
   isAdyacent,
   updateBoard,
 } from '../utils/utils';
@@ -28,10 +27,14 @@ interface GameplayProps {}
 
 const Gameplay: FunctionComponent<GameplayProps> = () => {
   const [game, setGame] = useState<IGame>();
-  const [score, setScore] = useState<number>(INITIAL_SCORE);
-  const [remainingMovements, setRemainingMovements] =
-    useState<number>(MOVEMENTS_PER_TURN);
+  const [score, setScore] = useState<number>(GAME_CONFIG.INITIAL_SCORE);
+  const [isGameOver, setIsGameOver] = useState<boolean>(false);
+  const [youWin, setYouWin] = useState<boolean>(false);
+  const [remainingMovements, setRemainingMovements] = useState<number>(
+    GAME_CONFIG.MOVEMENTS_PER_TURN
+  );
   const [selectedUnit, setSelectedUnit] = useState<IUnit>();
+  const [selectedStoreItem, setSelectedStoreItem] = useState<UnitTypes>();
 
   useEffect(() => {
     const board = generateBoard();
@@ -58,61 +61,96 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
     }
   };
 
+  const onStoreItemSelect = (item: UnitTypes) => {
+    if (selectedStoreItem === item) {
+      setSelectedStoreItem(undefined);
+    } else {
+      setSelectedStoreItem(item);
+      if (selectedUnit) {
+        const newUnit = selectedUnit.release();
+        setUpdateBoard([{ position: newUnit.position, unit: newUnit }]);
+      }
+      setSelectedUnit(undefined);
+    }
+  };
+
   const onBoardBoxClick = (position: IPosition) => {
     if (remainingMovements! > 0) {
       const box = getBox(game?.board!, position);
       const unit = box.unit;
 
-      if (!selectedUnit) {
-        if (unit && unit.faction === Faction.ALLY) {
-          selectUnit(position, unit);
+      if (selectedStoreItem) {
+        if (!unit) {
+          const board = insertUnit(
+            game?.board!,
+            UnitTypes[selectedStoreItem],
+            Faction.ALLY,
+            position
+          );
+          setUpdateBoard([
+            { position, unit: board[position.row][position.column].unit },
+          ]);
+          setSelectedStoreItem(undefined);
+          setScore(score - UNIT_COST[selectedStoreItem]);
+          if (GAME_CONFIG.STORE.SHOULD_BUY_UNITS_COUNT_AS_MOVEMENTS) {
+            finishMovement();
+          }
         }
       } else {
-        // si hago click sobre una unidad
-        if (unit) {
-          // si hice click sobre la unidad previamente seleccionada
-          if (unit.position === selectedUnit.position) {
-            releaseUnit(position, unit);
-          } else {
-            // si es una unidad de mi misma faccion
-            if (unit.faction === Faction.ALLY) {
-              // si son del mismo tipo y el mismo nivel de fusion
-              if (
-                unit.type === selectedUnit.type &&
-                unit.level === selectedUnit.level &&
-                unit.level !== MAX_LEVEL
-              ) {
-                fuse(position, selectedUnit, unit);
-              } else {
-                if (
-                  selectedUnit.type === UnitTypes.MAGE &&
-                  unit.type !== UnitTypes.KING
-                ) {
-                  heal(selectedUnit, unit);
-                }
-              }
+        if (!selectedUnit) {
+          if (unit && unit.faction === Faction.ALLY) {
+            selectUnit(position, unit);
+          }
+        } else {
+          // si hago click sobre una unidad
+          if (unit) {
+            // si hice click sobre la unidad previamente seleccionada
+            if (unit.position === selectedUnit.position) {
+              releaseUnit(position, unit);
             } else {
-              // si es una unidad enemiga
-              if (unit.type !== UnitTypes.KING) {
-                attack(selectedUnit, unit);
+              // si es una unidad de mi misma faccion
+              if (unit.faction === Faction.ALLY) {
+                // si son del mismo tipo y el mismo nivel de fusion
+                if (
+                  unit.type === selectedUnit.type &&
+                  unit.level === selectedUnit.level &&
+                  unit.level !== GAME_CONFIG.MAX_LEVEL
+                ) {
+                  fuse(position, selectedUnit, unit);
+                } else {
+                  if (
+                    selectedUnit.type === UnitTypes.MAGE &&
+                    unit.type !== UnitTypes.KING
+                  ) {
+                    heal(selectedUnit, unit);
+                  }
+                }
               } else {
-                const isKingProtected = hasUnitsArround(game!.board, position);
-                if (!isKingProtected) {
+                // si es una unidad enemiga
+                if (unit.type !== UnitTypes.KING) {
                   attack(selectedUnit, unit);
+                } else {
+                  const isKingProtected = hasUnitsArround(
+                    game!.board,
+                    position
+                  );
+                  if (!isKingProtected) {
+                    attack(selectedUnit, unit);
+                  }
                 }
               }
             }
-          }
-        } else {
-          // si hago click sobre el campo vacio
-          //move
-          const canMove =
-            isAdyacent(selectedUnit.position, position) &&
-            (selectedUnit.type !== UnitTypes.KING ||
-              (selectedUnit.type === UnitTypes.KING &&
-                remainingMovements === MOVEMENTS_PER_TURN));
-          if (canMove) {
-            move(position, selectedUnit);
+          } else {
+            // si hago click sobre el campo vacio
+            //move
+            const canMove =
+              isAdyacent(selectedUnit.position, position) &&
+              (selectedUnit.type !== UnitTypes.KING ||
+                (selectedUnit.type === UnitTypes.KING &&
+                  remainingMovements === GAME_CONFIG.MOVEMENTS_PER_TURN));
+            if (canMove) {
+              move(position, selectedUnit);
+            }
           }
         }
       }
@@ -122,6 +160,7 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
   const selectUnit = (position: IPosition, unit: IUnit) => {
     const newUnit = unit.select();
     setSelectedUnit(newUnit);
+    setSelectedStoreItem(undefined);
     setUpdateBoard([{ position, unit: newUnit }]);
   };
 
@@ -155,6 +194,16 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
     if (attackResult.couldAttack) {
       setScore(score + attackResult.gainedPoints);
       setUpdateBoard([attackResult.origin, attackResult.target]);
+
+      if (
+        targetUnit.type === UnitTypes.KING &&
+        attackResult.target.unit === undefined
+      ) {
+        // eliminaste al rey emenigo
+        setIsGameOver(true);
+        setYouWin(true);
+      }
+
       finishMovement();
     }
   };
@@ -174,6 +223,7 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
   const finishMovement = () => {
     const nextRemainingMovements = remainingMovements - 1;
     setSelectedUnit(undefined); // siempre voy a deseleccionar la unidad despues de un turno
+    setSelectedStoreItem(undefined); // siempre voy a deseleccionar la unidad seleccionada en la tienda
     setRemainingMovements(nextRemainingMovements);
     if (nextRemainingMovements == 0 || selectedUnit?.type === UnitTypes.KING) {
       finishTurn();
@@ -210,89 +260,65 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
 
     return (
       <div className='board-container'>
-        <div
-          style={{
-            display: 'flex',
-            gap: 70,
-            textAlign: 'center',
-            color: '#ffffff8f',
-          }}
-        >
-          <div>0</div>
-          <div>1</div>
-          <div>2</div>
-          <div>3</div>
-          <div>4</div>
-          <div>5</div>
-        </div>
-
-        {game?.board.map((row: IBoardBox[], rowIndex: number) => {
-          return (
-            <div className='row' key={`row-${rowIndex}`}>
-              <div style={boxStyle}>{rowIndex}</div>
-              {row.map((box: IBoardBox, columnIndex: number) => {
-                const unit = box.unit;
-                return (
-                  <BoxContainer
-                    key={`box-${rowIndex}-${columnIndex}`}
-                    onClick={() =>
-                      onBoardBoxClick({ row: rowIndex, column: columnIndex })
-                    }
-                  >
-                    {/* {box.unit ? box.unit.render?.() : null} */}
-                    {/* TODO castear box.unit a Unidad */}
-                    {unit ? (
-                      <UnitComponent
-                        type={unit.type}
-                        name={unit.name}
-                        points={unit.points}
-                        level={unit.level}
-                        faction={unit.faction}
-                        selected={unit.selected}
-                        rotations={unit.rotations}
-                      />
-                    ) : null}
-                  </BoxContainer>
-                );
-              })}
+        {isGameOver ? (
+          <div>
+            GAME OVER {youWin ? <div>YOU WIN</div> : <div>YOU LOOSE</div>}
+          </div>
+        ) : (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                gap: 70,
+                textAlign: 'center',
+                color: '#ffffff8f',
+              }}
+            >
+              <div>0</div>
+              <div>1</div>
+              <div>2</div>
+              <div>3</div>
+              <div>4</div>
+              <div>5</div>
             </div>
-          );
-        })}
-      </div>
-    );
-  };
 
-  const renderUnitStore = () => {
-    return (
-      <div className='unit-store'>
-        <div className='store-title'>BUY</div>
-        <UnitComponent
-          name={'W'}
-          points={UNIT_COST.WARRIOR}
-          level={UnitLevels.LEVEL1}
-          faction={Faction.ALLY}
-          type={UnitTypes.WARRIOR}
-          selected={false}
-          rotations={[]}
-        ></UnitComponent>
-        <UnitComponent
-          name={'A'}
-          points={UNIT_COST.ARCHER}
-          level={UnitLevels.LEVEL1}
-          faction={Faction.ALLY}
-          type={UnitTypes.ARCHER}
-          selected={false}
-          rotations={[]}
-        ></UnitComponent>
-        <UnitComponent
-          name={'M'}
-          points={UNIT_COST.MAGE}
-          level={UnitLevels.LEVEL1}
-          faction={Faction.ALLY}
-          type={UnitTypes.MAGE}
-          selected={false}
-          rotations={[]}
-        ></UnitComponent>
+            {game?.board.map((row: IBoardBox[], rowIndex: number) => {
+              return (
+                <div className='row' key={`row-${rowIndex}`}>
+                  <div style={boxStyle}>{rowIndex}</div>
+                  {row.map((box: IBoardBox, columnIndex: number) => {
+                    const unit = box.unit;
+                    return (
+                      <BoxContainer
+                        key={`box-${rowIndex}-${columnIndex}`}
+                        onClick={() =>
+                          onBoardBoxClick({
+                            row: rowIndex,
+                            column: columnIndex,
+                          })
+                        }
+                      >
+                        {/* {box.unit ? box.unit.render?.() : null} */}
+                        {/* TODO castear box.unit a Unidad */}
+                        {unit ? (
+                          <UnitComponent
+                            type={unit.type}
+                            name={unit.name}
+                            points={unit.points}
+                            level={unit.level}
+                            faction={unit.faction}
+                            selected={unit.selected}
+                            rotations={unit.rotations}
+                          />
+                        ) : null}
+                      </BoxContainer>
+                    );
+                  })}
+                </div>
+              );
+            })}
+          </>
+        )}
       </div>
     );
   };
@@ -306,7 +332,7 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
         <div
           onClick={() => {
             if (remainingMovements === 0) {
-              setRemainingMovements(MOVEMENTS_PER_TURN);
+              setRemainingMovements(GAME_CONFIG.MOVEMENTS_PER_TURN);
             }
           }}
         >
@@ -324,7 +350,14 @@ const Gameplay: FunctionComponent<GameplayProps> = () => {
         {renderBoard()}
         {renderKingBoosters()}
       </div>
-      {renderUnitStore()}
+      <div className='unit-store'>
+        <Store
+          score={score}
+          disabled={remainingMovements === 0}
+          selectedItem={selectedStoreItem}
+          onSlectItem={onStoreItemSelect}
+        />
+      </div>
     </div>
   );
 };

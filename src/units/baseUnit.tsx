@@ -6,6 +6,7 @@ import {
   UnitTypes,
   UNIT_COST,
   UNIT_INITIAL_POINTS,
+  UNIT_NAMES,
 } from '../constants/general';
 import { IAttackResult } from '../models/IAttackResult';
 import { IPosition } from '../models/IPosition';
@@ -16,7 +17,6 @@ import { IHealResult } from '../models/IHealResult';
 
 interface BaseUnitProps {
   type: UnitTypes;
-  name: string;
   position: IPosition;
   faction: Faction;
   points?: number;
@@ -25,7 +25,6 @@ interface BaseUnitProps {
 }
 
 export class BaseUnit implements IUnit {
-  name: string;
   type: UnitTypes;
   position: IPosition;
   initialPoints: number;
@@ -36,11 +35,12 @@ export class BaseUnit implements IUnit {
   selected: boolean;
   rotations: number[];
   range: number;
+  name: string;
 
   constructor(props: BaseUnitProps) {
-    const { type, name, position, faction, points, level, range } = props;
+    const { type, position, faction, points, level, range } = props;
     this.type = type;
-    this.name = name;
+    this.name = UNIT_NAMES[this.type];
     this.position = position;
     this.initialPoints = UNIT_INITIAL_POINTS[this.type];
     this.level = level || UnitLevels.LEVEL1;

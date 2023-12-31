@@ -1,20 +1,23 @@
+import classNames from 'classnames';
 import { FunctionComponent, ReactNode } from 'react';
 import './index.css';
 
 interface BoxContainerComponentProps {
   children?: ReactNode;
   onClick?: () => void;
+  disabled?: boolean;
 }
 
 const BoxContainerComponent: FunctionComponent<BoxContainerComponentProps> = ({
   children,
   onClick,
+  disabled,
 }) => {
   return (
     <div
-      className='box-container'
+      className={classNames('box-container', { disabled })}
       onClick={() => {
-        onClick?.();
+        !disabled && onClick?.();
       }}
     >
       {children}

@@ -4,8 +4,6 @@
   margin-top: 44px;
 }
 
-.game {}
-
 .match-info {
   display: flex;
   justify-content: center;
@@ -59,16 +57,4 @@
   border: #ffffff5b 1px solid;
   padding: 15px;
   height: fit-content;
-}
-
-.unit-store .store-title {
-  color: #ffcf00;
-  text-shadow: 0px 2px 1px black;
-  font-size: 32px;
-  font-weight: bolder;
-}
-
-.unit-store .unit {
-  width: 62px;
-  height: 62px;
 }

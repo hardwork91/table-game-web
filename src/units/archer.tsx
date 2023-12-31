@@ -12,6 +12,6 @@ interface ArcherProps {
 
 export class Archer extends BaseDistanceUnit implements IUnit {
   constructor(props: ArcherProps) {
-    super({ ...props, type: UnitTypes.ARCHER, name: 'A', range: 3 });
+    super({ ...props, type: UnitTypes.ARCHER, range: 3 });
   }
 }

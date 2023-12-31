@@ -8,7 +8,6 @@ import { BaseUnit } from './baseUnit';
 
 interface BaseUnitProps {
   type: UnitTypes;
-  name: string;
   position: IPosition;
   faction: Faction;
   points?: number;
